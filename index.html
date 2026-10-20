@@ -3,181 +3,254 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>FoodSpot</title>
-<meta name="description" content="A restaurant shared with you on FoodSpot." />
+<title>FoodSpot · Every food reel, pinned on your map</title>
+<meta name="description" content="Share a food reel from Instagram or YouTube. FoodSpot finds the restaurant, pins it on your map, and gets you there with one tap. Free for Android." />
 <meta name="theme-color" content="#0D0C0B" />
+<meta property="og:title" content="FoodSpot · Every food reel, pinned on your map" />
+<meta property="og:description" content="Share a reel, FoodSpot finds the restaurant and pins it on your map. Free for Android." />
+<meta property="og:image" content="https://foodspot.app/icon.png" />
 <link rel="icon" href="icon.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" />
-<!--
-  FoodSpot share landing page. Static: the spot travels in the URL fragment
-  (#<base64url JSON>, format v1, same as src/lib/spot-codec.ts), so no server is needed.
-  On Android it first tries to open the app (foodspot://add?d=…) and comes back here with
-  ?noapp=1 if FoodSpot isn't installed. Set APK_URL below when the APK is published.
--->
+<script>
+  // Shared-spot links used to live at the site root (#<payload>); send them to /s/.
+  function toSpot() { if (location.hash.length > 20) location.replace('s/' + location.hash); }
+  toSpot();
+  addEventListener('hashchange', toSpot);
+</script>
 <style>
   :root {
-    --bg: #FAF8F4; --card: #FFFFFF; --text: #16130F; --muted: #6F6A62; --faint: #9C968C;
-    --border: #ECE7DF; --accent: #E8492F; --accent-soft: #FDE9E4; --on-accent: #FFFFFF;
+    --bg: #0D0C0B; --bg2: #131210; --card: #181614; --text: #F6F3EE; --muted: #ABA59C; --faint: #7A746B;
+    --border: #2A2723; --accent: #FF6A47; --accent-deep: #E8492F; --accent-soft: #3A1C14; --on-accent: #FFFFFF;
+    --max: 1100px;
   }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #0D0C0B; --card: #181614; --text: #F6F3EE; --muted: #ABA59C; --faint: #7A746B;
-      --border: #2A2723; --accent: #FF6A47; --accent-soft: #3A1C14;
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #FAF8F4; --bg2: #F3EFE8; --card: #FFFFFF; --text: #16130F; --muted: #6F6A62; --faint: #9C968C;
+      --border: #ECE7DF; --accent: #E8492F; --accent-deep: #D63D24; --accent-soft: #FDE9E4;
     }
   }
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   html, body { margin: 0; background: var(--bg); color: var(--text); }
-  body {
-    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-    min-height: 100vh; display: flex; justify-content: center;
-    padding: max(24px, env(safe-area-inset-top)) 16px 40px;
-    -webkit-font-smoothing: antialiased;
-  }
-  main { width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: 20px; }
-  .brand { display: flex; align-items: center; gap: 10px; }
-  .brand img { width: 40px; height: 40px; border-radius: 12px; }
-  .wordmark { font-family: Fraunces, Georgia, serif; font-size: 24px; font-weight: 600; letter-spacing: -0.3px; }
+  body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; line-height: 1.55; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  a { color: inherit; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+  .serif { font-family: Fraunces, Georgia, serif; font-weight: 600; letter-spacing: -0.5px; }
+  .label { font-size: 12px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; color: var(--accent); }
+
+  /* nav */
+  nav { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+        background: color-mix(in srgb, var(--bg) 82%, transparent); border-bottom: 1px solid var(--border); }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .brand img { width: 34px; height: 34px; border-radius: 10px; }
+  .wordmark { font-family: Fraunces, Georgia, serif; font-size: 22px; font-weight: 600; }
   .wordmark span { color: var(--accent); }
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 22px; }
-  .label { font-size: 11px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase; color: var(--faint); }
-  h1 { font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 32px; line-height: 1.12; letter-spacing: -0.5px; margin: 6px 0 8px; overflow-wrap: anywhere; }
-  .address { color: var(--muted); font-size: 15px; line-height: 1.5; margin: 0; }
-  .creator { display: flex; align-items: center; gap: 12px; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); }
-  .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-weight: 700; flex: none; }
-  .creator .who { font-weight: 700; }
-  .creator .handle { color: var(--muted); font-size: 14px; }
-  .actions { display: grid; gap: 10px; }
-  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .btn { display: flex; align-items: center; justify-content: center; gap: 8px; height: 54px; border-radius: 14px; font: 600 16px 'Plus Jakarta Sans', system-ui, sans-serif; text-decoration: none; border: 1.5px solid var(--border); color: var(--text); background: transparent; cursor: pointer; }
-  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
-  .btn:active { opacity: .75; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 52px; padding: 0 24px;
+         border-radius: 14px; font: 700 16px 'Plus Jakarta Sans', system-ui, sans-serif; text-decoration: none;
+         border: 1.5px solid var(--border); color: var(--text); background: transparent; transition: transform .15s ease, opacity .15s; }
+  .btn:hover { transform: translateY(-1px); }
+  .btn:active { opacity: .8; }
+  .btn.primary { background: var(--accent-deep); border-color: var(--accent-deep); color: var(--on-accent); box-shadow: 0 10px 30px -10px var(--accent-deep); }
+  .btn.small { height: 40px; padding: 0 16px; font-size: 14px; border-radius: 12px; }
+  .btn svg { width: 20px; height: 20px; }
+
+  /* hero */
+  .hero { position: relative; padding: 64px 0 40px; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: -20% -10% auto; height: 520px; z-index: -1;
+                  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent-deep) 22%, transparent), transparent); }
+  .hero .wrap { display: grid; grid-template-columns: 1.05fr .95fr; gap: 48px; align-items: center; }
+  h1 { font-size: clamp(40px, 6vw, 68px); line-height: 1.02; margin: 14px 0 18px; }
+  h1 em { font-style: normal; color: var(--accent); }
+  .lede { font-size: clamp(17px, 2vw, 19px); color: var(--muted); max-width: 520px; margin: 0 0 28px; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .meta { margin-top: 14px; font-size: 13.5px; color: var(--faint); }
+  .meta a { color: var(--accent); font-weight: 600; text-decoration: none; }
+  .phones { position: relative; height: 560px; }
+  .phone { position: absolute; width: 250px; border-radius: 34px; border: 8px solid #1d1b19; background: #000; overflow: hidden;
+           box-shadow: 0 40px 80px -30px rgba(0,0,0,.65), 0 0 0 1px rgba(255,255,255,.04); }
+  .phone img { display: block; width: 100%; height: auto; }
+  .phone.back { right: 12%; top: 0; transform: rotate(6deg); }
+  .phone.front { left: 4%; top: 48px; transform: rotate(-5deg); }
+
+  /* sections */
+  section { padding: 72px 0; }
+  .center { text-align: center; }
+  h2 { font-size: clamp(30px, 4vw, 44px); line-height: 1.1; margin: 10px 0 14px; }
+  .sub { color: var(--muted); font-size: 17px; max-width: 620px; margin: 0 auto; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 26px; }
+  .num { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft);
+         color: var(--accent); font-weight: 700; margin-bottom: 16px; }
+  .card h3 { font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 22px; margin: 0 0 6px; }
+  .card p { color: var(--muted); margin: 0; }
+  .alt { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 40px; }
+  .feature { display: flex; gap: 16px; align-items: flex-start; }
+  .icon { flex: none; width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }
+  .icon svg { width: 24px; height: 24px; }
   .download { text-align: center; }
-  .download p { color: var(--muted); font-size: 14px; line-height: 1.5; margin: 8px 0 0; }
-  .download .older { font-size: 12.5px; color: var(--faint); margin-top: 14px; }
-  .download .older a { color: var(--accent); font-weight: 600; text-decoration: none; }
-  .download h2 { font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 22px; margin: 0 0 6px; }
-  .note { color: var(--faint); font-size: 12.5px; text-align: center; margin: 0; }
-  .hidden { display: none !important; }
+  .download .card { max-width: 720px; margin: 32px auto 0; padding: 36px 28px; }
+  .install { text-align: left; margin: 28px auto 0; max-width: 520px; padding-left: 22px; color: var(--muted); }
+  .install li { margin: 6px 0; }
+  .install strong { color: var(--text); }
+  .faq { max-width: 760px; margin: 32px auto 0; }
+  details { border-bottom: 1px solid var(--border); padding: 18px 4px; }
+  summary { cursor: pointer; font-weight: 700; font-size: 17px; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: '+'; color: var(--accent); font-size: 22px; line-height: 1; }
+  details[open] summary::after { content: '–'; }
+  details p { color: var(--muted); margin: 10px 0 0; }
+  footer { border-top: 1px solid var(--border); padding: 32px 0 48px; color: var(--faint); font-size: 14px; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 14px 24px; justify-content: space-between; align-items: center; }
+  footer nav, footer .links { display: flex; flex-wrap: wrap; gap: 18px; position: static; background: none; border: 0; backdrop-filter: none; }
+  footer a { text-decoration: none; color: var(--muted); }
+
+  @media (max-width: 860px) {
+    .hero { padding-top: 40px; }
+    .hero .wrap { grid-template-columns: 1fr; gap: 24px; }
+    .phones { height: 430px; max-width: 420px; margin: 0 auto; width: 100%; }
+    .phone { width: 190px; border-width: 6px; border-radius: 28px; }
+    .phone.back { right: 4%; }
+    .phone.front { left: 2%; }
+    .steps, .features { grid-template-columns: 1fr; }
+    section { padding: 56px 0; }
+    nav .btn.small span { display: none; }
+  }
+  @media (max-width: 380px) { .phone { width: 160px; } .phones { height: 360px; } }
 </style>
 </head>
 <body>
-<main>
-  <div class="brand">
-    <img src="icon.png" alt="" />
-    <div class="wordmark">Food<span>Spot</span></div>
+<nav>
+  <div class="wrap">
+    <a class="brand" href="./"><img src="icon.png" alt="" /><span class="wordmark">Food<span>Spot</span></span></a>
+    <a class="btn small primary" href="#download">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg>
+      <span>Download</span>
+    </a>
   </div>
+</nav>
 
-  <section class="card" id="spot">
-    <div class="label" id="place">Shared with you</div>
-    <h1 id="name">A food spot for you</h1>
-    <p class="address" id="address">Open this link on your phone to see it in FoodSpot.</p>
-    <div class="creator hidden" id="creator">
-      <div class="avatar" id="initial"></div>
-      <div>
-        <div class="label">From the reel by</div>
-        <div><span class="who" id="who"></span> <span class="handle" id="handle"></span></div>
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <div class="label">Free for Android</div>
+      <h1 class="serif">Every food reel, <em>pinned</em> on your map.</h1>
+      <p class="lede">Share a reel from Instagram or YouTube. FoodSpot finds the restaurant, pins it on your map, and gets you there with one tap.</p>
+      <div class="ctas">
+        <a class="btn primary apk" href="https://github.com/sandeepkramesan/foodspot/releases/latest/download/FoodSpot.apk">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg>
+          Download for Android
+        </a>
+        <a class="btn" href="#how">How it works</a>
+      </div>
+      <p class="meta"><span class="version">Latest version</span> · Older phone? <a class="apk32" href="https://github.com/sandeepkramesan/foodspot/releases/latest/download/FoodSpot-32bit.apk">Get the 32-bit version</a></p>
+    </div>
+    <div class="phones" aria-hidden="true">
+      <div class="phone back"><img src="img/screen-map.webp" alt="" loading="eager" width="540" height="1106" /></div>
+      <div class="phone front"><img src="img/screen-spot.webp" alt="" loading="eager" width="540" height="1106" /></div>
+    </div>
+  </div>
+</header>
+
+<section id="how">
+  <div class="wrap center">
+    <div class="label">How it works</div>
+    <h2 class="serif">From reel to table in three taps</h2>
+    <p class="sub">No copying addresses, no screenshots you’ll never find again.</p>
+    <div class="steps" style="text-align:left">
+      <div class="card"><div class="num">1</div><h3>Share the reel</h3><p>On Instagram or YouTube, tap <strong>Share</strong> and pick <strong>FoodSpot</strong>.</p></div>
+      <div class="card"><div class="num">2</div><h3>We find the spot</h3><p>FoodSpot reads the caption, finds the restaurant on the map and fills in the details. Fix anything with a tap.</p></div>
+      <div class="card"><div class="num">3</div><h3>Let’s go</h3><p>When you’re nearby, tap the pin and <strong>Let’s go</strong> for Google Maps directions from where you are.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap center">
+    <div class="label">Made for food lovers</div>
+    <h2 class="serif">Your own food map, everywhere you go</h2>
+    <div class="features" style="text-align:left">
+      <div class="card feature">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></div>
+        <div><h3>Every spot on one map</h3><p>Pins for every place you saved, grouped by city, with search and filters.</p></div>
+      </div>
+      <div class="card feature">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></div>
+        <div><h3>Know who found it</h3><p>See the creator behind each reel, their followers, and every spot you saved from them.</p></div>
+      </div>
+      <div class="card feature">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></div>
+        <div><h3>Share with friends</h3><p>Send a spot as a link. It opens right in their FoodSpot, ready to add.</p></div>
+      </div>
+      <div class="card feature">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+        <div><h3>Private by design</h3><p>No account, no ads. Your spots stay on your phone.</p></div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <div class="actions" id="actions">
-    <a class="btn primary" id="open" href="#">Open in FoodSpot</a>
-    <div class="row">
-      <a class="btn" id="directions" target="_blank" rel="noopener">Directions</a>
-      <a class="btn" id="reel" target="_blank" rel="noopener">Watch the reel</a>
+<section id="download" class="download">
+  <div class="wrap">
+    <div class="label">Download</div>
+    <h2 class="serif">Get FoodSpot for Android</h2>
+    <p class="sub">Free. <span class="version">Latest version</span>.</p>
+    <div class="card">
+      <a class="btn primary apk" href="https://github.com/sandeepkramesan/foodspot/releases/latest/download/FoodSpot.apk">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg>
+        Download FoodSpot<span class="size"></span>
+      </a>
+      <p class="meta">Most phones. Older phone and it won’t install? <a class="apk32" href="https://github.com/sandeepkramesan/foodspot/releases/latest/download/FoodSpot-32bit.apk">Get the 32-bit version<span class="size32"></span></a></p>
+      <ol class="install">
+        <li>Tap <strong>Download</strong> on your Android phone.</li>
+        <li>Open the downloaded <strong>FoodSpot.apk</strong>.</li>
+        <li>If Android asks, allow your browser to <strong>install unknown apps</strong> (just this once).</li>
+        <li>Tap <strong>Install</strong>, then open FoodSpot. Updates install the same way and keep your spots.</li>
+      </ol>
     </div>
   </div>
+</section>
 
-  <section class="card download">
-    <h2>Don’t have FoodSpot yet?</h2>
-    <a class="btn primary" id="download" href="#">Download for Android</a>
-    <p>Save restaurants from Instagram and YouTube reels and find them on your map.<br />
-      Android may ask you to allow installs from your browser.</p>
-    <p class="older" id="older-wrap">Older phone and the app won’t install?
-      <a id="download32" href="#">Get the 32-bit version</a></p>
-  </section>
+<section class="alt">
+  <div class="wrap">
+    <div class="center"><div class="label">Questions</div><h2 class="serif">Good to know</h2></div>
+    <div class="faq">
+      <details><summary>Is FoodSpot free?</summary><p>Yes, completely: no ads and no subscriptions.</p></details>
+      <details><summary>Is it on the Play Store or iPhone?</summary><p>Not yet. FoodSpot is Android-only for now and installs from this page. Play Store and iPhone may come later.</p></details>
+      <details><summary>Which reels work?</summary><p>Any Instagram reel or YouTube Short (and most web pages or Google Maps links). FoodSpot works best when the caption names the place, like “📍 Restaurant, Area, City”. If it can’t tell, it shows its best guess and you pick the spot on the map.</p></details>
+      <details><summary>Where is my data stored?</summary><p>On your phone. FoodSpot has no accounts, and your saved spots never leave your device unless you share one. Read the <a href="privacy">privacy policy</a>.</p></details>
+      <details><summary>I’m a creator. Can I manage my profile?</summary><p>Soon: you’ll be able to claim your FoodSpot profile by signing in with Instagram or YouTube, and add your other accounts.</p></details>
+    </div>
+  </div>
+</section>
 
-  <p class="note" id="note"></p>
-</main>
+<footer>
+  <div class="wrap">
+    <span>© 2026 FoodSpot · made by ftwco.</span>
+    <div class="links"><a href="privacy">Privacy</a><a href="terms">Terms</a><a href="delete-data">Delete your data</a><a href="mailto:privacy@foodspot.app">Contact</a></div>
+  </div>
+</footer>
 
 <script>
-(function () {
-  // Where the APK is downloaded from (e.g. a GitHub Releases "latest" asset URL).
-  // FoodSpot.apk is 64-bit only (nearly every phone); FoodSpot-32bit.apk is for older phones.
-  var APK_URL = 'https://github.com/sandeepkramesan/foodspot/releases/latest/download/FoodSpot.apk';
-  var APK_32_URL = 'https://github.com/sandeepkramesan/foodspot/releases/latest/download/FoodSpot-32bit.apk';
-  var PACKAGE = 'com.foodspot.app';
-
-  var B64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
-  function decode(s) {
-    var clean = s.replace(/[^A-Za-z0-9_-]/g, ''), bytes = [];
-    for (var i = 0; i < clean.length; i += 4) {
-      var chunk = clean.slice(i, i + 4), padded = (chunk + 'AAAA').slice(0, 4), n = 0;
-      for (var j = 0; j < 4; j++) n = (n << 6) | B64.indexOf(padded[j]);
-      bytes.push((n >> 16) & 255);
-      if (chunk.length > 2) bytes.push((n >> 8) & 255);
-      if (chunk.length > 3) bytes.push(n & 255);
-    }
-    var pct = bytes.map(function (b) { return '%' + ('0' + b.toString(16)).slice(-2); }).join('');
-    return JSON.parse(decodeURIComponent(pct));
-  }
-  function $(id) { return document.getElementById(id); }
-  function cityLabel(address) {
-    var parts = address.split(',').map(function (p) { return p.trim(); })
-      .filter(function (p) { return p && !/\bWard$|\bZone \d+$|^\d{4,6}$/i.test(p); });
-    if (parts.length && /^(india|united states|usa|united kingdom|uk|uae|united arab emirates|singapore)$/i.test(parts[parts.length - 1])) parts.pop();
-    if (parts.length >= 4) parts.pop();
-    return parts.slice(-2).join(' · ');
-  }
-
-  var payload = location.hash.slice(1);
-  var spot = null;
-  try { spot = payload ? decode(payload) : null; } catch (e) { spot = null; }
-  if (!spot || spot.v !== 1) spot = null;
-
-  var isAndroid = /Android/i.test(navigator.userAgent);
-  var appLink = spot ? 'foodspot://add?d=' + payload : 'foodspot://';
-  var noApp = /[?&]noapp=1/.test(location.search);
-  var fallback = location.origin + location.pathname + '?noapp=1' + location.hash;
-  var intentLink = 'intent://' + appLink.replace('foodspot://', '') +
-    '#Intent;scheme=foodspot;package=' + PACKAGE +
-    ';S.browser_fallback_url=' + encodeURIComponent(fallback) + ';end';
-
-  if (APK_URL) $('download').href = APK_URL;
-  else { $('download').removeAttribute('href'); $('download').textContent = 'Android app coming soon'; }
-  if (APK_32_URL) $('download32').href = APK_32_URL; else $('older-wrap').classList.add('hidden');
-
-  if (!spot) {
-    $('actions').classList.add('hidden');
-    $('note').textContent = payload ? 'This link looks incomplete. Ask your friend to share it again.' : '';
-    return;
-  }
-
-  document.title = spot.n + ' · FoodSpot';
-  $('place').textContent = cityLabel(spot.a || '') || 'Shared with you';
-  $('name').textContent = spot.n;
-  $('address').textContent = spot.a || '';
-  if (spot.c && (spot.c.n || spot.c.h)) {
-    $('creator').classList.remove('hidden');
-    $('who').textContent = spot.c.n || '@' + spot.c.h;
-    $('handle').textContent = spot.c.n && spot.c.h ? '@' + spot.c.h : '';
-    $('initial').textContent = ((spot.c.n || spot.c.h).replace(/^[^\p{L}\p{N}]+/u, '')[0] || '?').toUpperCase();
-  }
-  var dest = spot.nb === 'pin' ? spot.la + ',' + spot.lo : [spot.n, spot.a].filter(Boolean).join(', ');
-  $('directions').href = 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(dest);
-  if (spot.u) $('reel').href = spot.u; else $('reel').classList.add('hidden');
-  $('open').href = isAndroid ? intentLink : appLink;
-
-  if (noApp) {
-    $('note').textContent = 'FoodSpot isn’t installed on this phone yet. Download it, then open this link again.';
-    $('open').classList.remove('primary');
-  } else if (isAndroid) {
-    // Opens the app if installed; otherwise Chrome loads the ?noapp=1 fallback (this page).
-    location.replace(intentLink);
-  }
-})();
+  // Show the latest version and download sizes from GitHub Releases (falls back to plain text).
+  fetch('https://api.github.com/repos/sandeepkramesan/foodspot/releases/latest')
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (rel) {
+      if (!rel) return;
+      var mb = function (name) {
+        var a = (rel.assets || []).filter(function (x) { return x.name === name; })[0];
+        return a ? Math.round(a.size / 1048576) + ' MB' : '';
+      };
+      var v = 'Version ' + String(rel.tag_name || '').replace(/^v/, '');
+      document.querySelectorAll('.version').forEach(function (el) { el.textContent = v; });
+      var s = mb('FoodSpot.apk'), s32 = mb('FoodSpot-32bit.apk');
+      document.querySelectorAll('.size').forEach(function (el) { if (s) el.textContent = ' · ' + s; });
+      document.querySelectorAll('.size32').forEach(function (el) { if (s32) el.textContent = ' (' + s32 + ')'; });
+    })
+    .catch(function () {});
 </script>
 </body>
 </html>

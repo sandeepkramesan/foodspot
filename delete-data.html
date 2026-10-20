@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Delete your data · FoodSpot</title>
+<meta name="description" content="How to delete your FoodSpot data." />
+<meta name="theme-color" content="#0D0C0B" />
+<link rel="icon" href="icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" />
+<link rel="stylesheet" href="site.css" />
+</head>
+<body>
+<main>
+  <a class="brand" href="./"><img src="icon.png" alt="" /><span class="wordmark">Food<span>Spot</span></span></a>
+
+  <h1>Delete your data</h1>
+  <p class="updated">FoodSpot keeps very little about you. Here’s how to remove all of it.</p>
+
+  <div class="card" id="confirmation" hidden>
+    <p><strong>Your deletion request was received.</strong> Your connected accounts and creator profile
+      have been removed from FoodSpot.</p>
+    <p>Confirmation code: <span class="code" id="code"></span></p>
+  </div>
+
+  <h2>Spots you saved</h2>
+  <p>Your spots, notes and settings exist only on your phone. To delete them, delete spots in the app
+    (long-press to select several), or uninstall FoodSpot, which erases everything it stored.</p>
+
+  <h2>If you claimed a creator profile</h2>
+  <p>We store the IDs, handles and names of the accounts you connected (no passwords or access tokens).
+    To delete them:</p>
+  <ul>
+    <li><strong>In the app:</strong> open your profile → “You manage this profile · Options” →
+      <strong>Remove profile</strong>. This deletes your claim and every connected account immediately.</li>
+    <li><strong>From Instagram:</strong> Settings → Apps and websites → remove FoodSpot. Instagram tells
+      us, and we delete your Instagram connection and the profile it claimed automatically.</li>
+    <li><strong>From Google:</strong> remove FoodSpot at
+      <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>, then remove
+      the YouTube connection in the app (or email us).</li>
+    <li><strong>By email:</strong> write to <a href="mailto:privacy@foodspot.app">privacy@foodspot.app</a>
+      from an address we can verify, with your profile handle. We delete it within 30 days.</li>
+  </ul>
+
+  <footer><a href="./">FoodSpot</a><a href="privacy">Privacy</a><a href="terms">Terms</a><a href="delete-data">Delete your data</a></footer>
+</main>
+<script>
+  // Meta's data-deletion callback links here with ?code=<confirmation code>.
+  var code = new URLSearchParams(location.search).get('code');
+  if (code && /^[A-Za-z0-9_-]{4,40}$/.test(code)) {
+    document.getElementById('code').textContent = code;
+    document.getElementById('confirmation').hidden = false;
+  }
+</script>
+</body>
+</html>

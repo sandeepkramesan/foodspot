@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>FoodSpot</title>
+<meta name="description" content="A restaurant shared with you on FoodSpot." />
+<meta name="theme-color" content="#0D0C0B" />
+<link rel="icon" href="../icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" />
+<!--
+  FoodSpot share landing page. Static: the spot travels in the URL fragment
+  (#<base64url JSON>, format v1, same as src/lib/spot-codec.ts), so no server is needed.
+  On Android it first tries to open the app (foodspot://add?d=…) and comes back here with
+  ?noapp=1 if FoodSpot isn't installed. Set APK_URL below when the APK is published.
+-->
+<style>
+  :root {
+    --bg: #FAF8F4; --card: #FFFFFF; --text: #16130F; --muted: #6F6A62; --faint: #9C968C;
+    --border: #ECE7DF; --accent: #E8492F; --accent-soft: #FDE9E4; --on-accent: #FFFFFF;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0D0C0B; --card: #181614; --text: #F6F3EE; --muted: #ABA59C; --faint: #7A746B;
+      --border: #2A2723; --accent: #FF6A47; --accent-soft: #3A1C14;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); }
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    min-height: 100vh; display: flex; justify-content: center;
+    padding: max(24px, env(safe-area-inset-top)) 16px 40px;
+    -webkit-font-smoothing: antialiased;
+  }
+  main { width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: 20px; }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand img { width: 40px; height: 40px; border-radius: 12px; }
+  .wordmark { font-family: Fraunces, Georgia, serif; font-size: 24px; font-weight: 600; letter-spacing: -0.3px; }
+  .wordmark span { color: var(--accent); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 22px; }
+  .label { font-size: 11px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase; color: var(--faint); }
+  h1 { font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 32px; line-height: 1.12; letter-spacing: -0.5px; margin: 6px 0 8px; overflow-wrap: anywhere; }
+  .address { color: var(--muted); font-size: 15px; line-height: 1.5; margin: 0; }
+  .creator { display: flex; align-items: center; gap: 12px; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-weight: 700; flex: none; }
+  .creator .who { font-weight: 700; }
+  .creator .handle { color: var(--muted); font-size: 14px; }
+  .actions { display: grid; gap: 10px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .btn { display: flex; align-items: center; justify-content: center; gap: 8px; height: 54px; border-radius: 14px; font: 600 16px 'Plus Jakarta Sans', system-ui, sans-serif; text-decoration: none; border: 1.5px solid var(--border); color: var(--text); background: transparent; cursor: pointer; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .btn:active { opacity: .75; }
+  .download { text-align: center; }
+  .download p { color: var(--muted); font-size: 14px; line-height: 1.5; margin: 8px 0 0; }
+  .download .older { font-size: 12.5px; color: var(--faint); margin-top: 14px; }
+  .download .older a { color: var(--accent); font-weight: 600; text-decoration: none; }
+  .download h2 { font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 22px; margin: 0 0 6px; }
+  .links a { color: inherit; }
+  .note { color: var(--faint); font-size: 12.5px; text-align: center; margin: 0; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <div class="brand">
+    <img src="../icon.png" alt="" />
+    <div class="wordmark">Food<span>Spot</span></div>
+  </div>
+
+  <section class="card" id="spot">
+    <div class="label" id="place">Shared with you</div>
+    <h1 id="name">A food spot for you</h1>
+    <p class="address" id="address">Open this link on your phone to see it in FoodSpot.</p>
+    <div class="creator hidden" id="creator">
+      <div class="avatar" id="initial"></div>
+      <div>
+        <div class="label">From the reel by</div>
+        <div><span class="who" id="who"></span> <span class="handle" id="handle"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="actions" id="actions">
+    <a class="btn primary" id="open" href="#">Open in FoodSpot</a>
+    <div class="row">
+      <a class="btn" id="directions" target="_blank" rel="noopener">Directions</a>
+      <a class="btn" id="reel" target="_blank" rel="noopener">Watch the reel</a>
+    </div>
+  </div>
+
+  <section class="card download">
+    <h2>Don’t have FoodSpot yet?</h2>
+    <a class="btn primary" id="download" href="#">Download for Android</a>
+    <p>Save restaurants from Instagram and YouTube reels and find them on your map.<br />
+      Android may ask you to allow installs from your browser.</p>
+    <p class="older" id="older-wrap">Older phone and the app won’t install?
+      <a id="download32" href="#">Get the 32-bit version</a></p>
+  </section>
+
+  <p class="note" id="note"></p>
+  <p class="note links"><a href="../privacy">Privacy</a> · <a href="../terms">Terms</a> · <a href="../delete-data">Delete your data</a> · made by ftwco.</p>
+</main>
+
+<script>
+(function () {
+  // Where the APK is downloaded from (e.g. a GitHub Releases "latest" asset URL).
+  // FoodSpot.apk is 64-bit only (nearly every phone); FoodSpot-32bit.apk is for older phones.
+  var APK_URL = 'https://github.com/sandeepkramesan/foodspot/releases/latest/download/FoodSpot.apk';
+  var APK_32_URL = 'https://github.com/sandeepkramesan/foodspot/releases/latest/download/FoodSpot-32bit.apk';
+  var PACKAGE = 'com.foodspot.app';
+
+  var B64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+  function decode(s) {
+    var clean = s.replace(/[^A-Za-z0-9_-]/g, ''), bytes = [];
+    for (var i = 0; i < clean.length; i += 4) {
+      var chunk = clean.slice(i, i + 4), padded = (chunk + 'AAAA').slice(0, 4), n = 0;
+      for (var j = 0; j < 4; j++) n = (n << 6) | B64.indexOf(padded[j]);
+      bytes.push((n >> 16) & 255);
+      if (chunk.length > 2) bytes.push((n >> 8) & 255);
+      if (chunk.length > 3) bytes.push(n & 255);
+    }
+    var pct = bytes.map(function (b) { return '%' + ('0' + b.toString(16)).slice(-2); }).join('');
+    return JSON.parse(decodeURIComponent(pct));
+  }
+  function $(id) { return document.getElementById(id); }
+  function cityLabel(address) {
+    var parts = address.split(',').map(function (p) { return p.trim(); })
+      .filter(function (p) { return p && !/\bWard$|\bZone \d+$|^\d{4,6}$/i.test(p); });
+    if (parts.length && /^(india|united states|usa|united kingdom|uk|uae|united arab emirates|singapore)$/i.test(parts[parts.length - 1])) parts.pop();
+    if (parts.length >= 4) parts.pop();
+    return parts.slice(-2).join(' · ');
+  }
+
+  var payload = location.hash.slice(1);
+  var spot = null;
+  try { spot = payload ? decode(payload) : null; } catch (e) { spot = null; }
+  if (!spot || spot.v !== 1) spot = null;
+
+  var isAndroid = /Android/i.test(navigator.userAgent);
+  var appLink = spot ? 'foodspot://add?d=' + payload : 'foodspot://';
+  var noApp = /[?&]noapp=1/.test(location.search);
+  var fallback = location.origin + location.pathname + '?noapp=1' + location.hash;
+  var intentLink = 'intent://' + appLink.replace('foodspot://', '') +
+    '#Intent;scheme=foodspot;package=' + PACKAGE +
+    ';S.browser_fallback_url=' + encodeURIComponent(fallback) + ';end';
+
+  if (APK_URL) $('download').href = APK_URL;
+  else { $('download').removeAttribute('href'); $('download').textContent = 'Android app coming soon'; }
+  if (APK_32_URL) $('download32').href = APK_32_URL; else $('older-wrap').classList.add('hidden');
+
+  if (!spot) {
+    $('actions').classList.add('hidden');
+    if (payload) {
+      $('note').textContent = 'This link looks incomplete. Ask your friend to share it again.';
+    } else {
+      // Home page (no shared spot).
+      $('place').textContent = 'Save the food you see in reels';
+      $('name').textContent = 'Your food map, from reels';
+      $('address').textContent = 'Seen a great food reel on Instagram or YouTube? Share it to FoodSpot. ' +
+        'It finds the restaurant, pins it on your map, and gets you there with one tap.';
+    }
+    return;
+  }
+
+  document.title = spot.n + ' · FoodSpot';
+  $('place').textContent = cityLabel(spot.a || '') || 'Shared with you';
+  $('name').textContent = spot.n;
+  $('address').textContent = spot.a || '';
+  if (spot.c && (spot.c.n || spot.c.h)) {
+    $('creator').classList.remove('hidden');
+    $('who').textContent = spot.c.n || '@' + spot.c.h;
+    $('handle').textContent = spot.c.n && spot.c.h ? '@' + spot.c.h : '';
+    $('initial').textContent = ((spot.c.n || spot.c.h).replace(/^[^\p{L}\p{N}]+/u, '')[0] || '?').toUpperCase();
+  }
+  var dest = spot.nb === 'pin' ? spot.la + ',' + spot.lo : [spot.n, spot.a].filter(Boolean).join(', ');
+  $('directions').href = 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(dest);
+  if (spot.u) $('reel').href = spot.u; else $('reel').classList.add('hidden');
+  $('open').href = isAndroid ? intentLink : appLink;
+
+  if (noApp) {
+    $('note').textContent = 'FoodSpot isn’t installed on this phone yet. Download it, then open this link again.';
+    $('open').classList.remove('primary');
+  } else if (isAndroid) {
+    // Opens the app if installed; otherwise Chrome loads the ?noapp=1 fallback (this page).
+    location.replace(intentLink);
+  }
+})();
+</script>
+</body>
+</html>
