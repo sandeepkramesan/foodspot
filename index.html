@@ -55,6 +55,8 @@
   .btn:active { opacity: .75; }
   .download { text-align: center; }
   .download p { color: var(--muted); font-size: 14px; line-height: 1.5; margin: 8px 0 0; }
+  .download .older { font-size: 12.5px; color: var(--faint); margin-top: 14px; }
+  .download .older a { color: var(--accent); font-weight: 600; text-decoration: none; }
   .download h2 { font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 22px; margin: 0 0 6px; }
   .note { color: var(--faint); font-size: 12.5px; text-align: center; margin: 0; }
   .hidden { display: none !important; }
@@ -93,6 +95,8 @@
     <a class="btn primary" id="download" href="#">Download for Android</a>
     <p>Save restaurants from Instagram and YouTube reels and find them on your map.<br />
       Android may ask you to allow installs from your browser.</p>
+    <p class="older" id="older-wrap">Older phone and the app won’t install?
+      <a id="download32" href="#">Get the 32-bit version</a></p>
   </section>
 
   <p class="note" id="note"></p>
@@ -101,7 +105,9 @@
 <script>
 (function () {
   // Where the APK is downloaded from (e.g. a GitHub Releases "latest" asset URL).
+  // FoodSpot.apk is 64-bit only (nearly every phone); FoodSpot-32bit.apk is for older phones.
   var APK_URL = 'https://github.com/sandeepkramesan/foodspot/releases/latest/download/FoodSpot.apk';
+  var APK_32_URL = 'https://github.com/sandeepkramesan/foodspot/releases/latest/download/FoodSpot-32bit.apk';
   var PACKAGE = 'com.foodspot.app';
 
   var B64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
@@ -141,6 +147,7 @@
 
   if (APK_URL) $('download').href = APK_URL;
   else { $('download').removeAttribute('href'); $('download').textContent = 'Android app coming soon'; }
+  if (APK_32_URL) $('download32').href = APK_32_URL; else $('older-wrap').classList.add('hidden');
 
   if (!spot) {
     $('actions').classList.add('hidden');
