@@ -135,6 +135,7 @@
   .center { text-align: center; }
   h2 { font-size: clamp(36px, 5vw, 62px); line-height: 1.04; margin: 18px 0 18px; font-weight: 500; letter-spacing: -0.03em; }
   .sub { color: var(--muted); font-size: 18px; max-width: 600px; margin: 0 auto; }
+  .acc { color: var(--accent); }
   .alt { background: var(--bg2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 
   /* how it works */
@@ -234,6 +235,15 @@
   .prose p strong { color: var(--text); font-weight: 600; }
   .prose h3 { font-family: Fraunces, serif; font-weight: 500; font-size: 24px; letter-spacing: -0.01em; margin: 30px 0 10px; }
   .prose a { color: var(--accent); }
+  .prose .lead { font-family: Fraunces, serif; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.35; letter-spacing: -0.01em;
+                 color: var(--text); margin: 6px 0 30px; }
+  .facts { list-style: none; margin: 0; padding: 0; }
+  .facts li { display: flex; gap: 18px; align-items: flex-start; padding: 20px 0; border-top: 1px solid var(--line); color: var(--muted); }
+  .facts li:last-child { border-bottom: 1px solid var(--line); }
+  .facts b { display: block; color: var(--text); font-weight: 600; margin-bottom: 4px; }
+  .facts a { display: inline-block; margin-top: 2px; font-weight: 600; text-decoration: none; }
+  .fi { flex: none; width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }
+  .fi svg { width: 20px; height: 20px; }
 
   /* download */
   .dl { position: relative; border-radius: 36px; padding: 1px; background: linear-gradient(140deg, color-mix(in srgb, var(--accent) 70%, transparent), var(--line) 38%, var(--line) 62%, color-mix(in srgb, var(--accent) 45%, transparent)); }
@@ -468,7 +478,6 @@
       <div class="step" data-reveal>
         <div class="n">01</div>
         <h3>Share the reel</h3>
-        <p>On Instagram or YouTube, tap <strong>Share</strong> and pick <strong>FoodSpot</strong>.</p>
         <div class="mock sheet" aria-hidden="true">
           <div class="title">Share to</div>
           <div class="apps">
@@ -482,7 +491,6 @@
       <div class="step" data-reveal>
         <div class="n">02</div>
         <h3>We find the spot</h3>
-        <p>FoodSpot reads the caption, finds the restaurant on the map and fills in the details. Fix anything with a tap.</p>
         <div class="mock" aria-hidden="true">
           <div class="caption">Best dosa I’ve had in years, crisp edges and that chutney!! <span class="hl">📍 The Dosa Room, Indiranagar, Bengaluru</span> #southindian</div>
           <div class="found"><span class="ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Found The Dosa Room</div>
@@ -491,7 +499,6 @@
       <div class="step" data-reveal>
         <div class="n">03</div>
         <h3>Let’s go</h3>
-        <p>When you’re nearby, tap the pin and <strong>Let’s go</strong> for Google Maps directions from where you are.</p>
         <div class="mock popup" aria-hidden="true">
           <div class="pname">The Dosa Room</div>
           <div class="prate"><b>9.1</b>/10 · saved from @southbites</div>
@@ -507,7 +514,7 @@
   <div class="wrap center">
     <div class="eyebrow" data-reveal><b>02</b> Features</div>
     <h2 class="serif" data-reveal>A food map that’s <em>actually yours</em>.</h2>
-    <p class="sub" data-reveal>Built for people who plan trips around what they’re going to eat.</p>
+    <p class="sub" data-reveal>Built for the <span class="acc">foodie</span> in you.</p>
     <div class="bento">
       <div class="tile map span4" data-reveal>
         <svg class="mini" viewBox="0 0 800 420" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -560,7 +567,7 @@
 
       <div class="tile span2" data-reveal>
         <h3>Respot the good ones</h3>
-        <p>Found a gem on someone’s list? Respot it into yours. They get the credit.</p>
+        <p>Found a gem on someone’s list? Respot it into yours.</p>
         <div class="art" aria-hidden="true">
           <div class="rs">
             <span class="rate">9.4<small>/10</small></span>
@@ -584,7 +591,7 @@
         <div class="copy">
           <h3>Public or private, every spot is your call</h3>
           <p>Public spots appear on your profile and on your followers’ maps. Private ones are only ever yours. Log in with email or Google and everything follows you to a new phone, and the map still works offline.</p>
-          <div class="chips"><span>Synced to your account</span><span>Works offline</span><span>No ads, ever</span><span>Delete everything anytime</span></div>
+          <div class="chips"><span>Synced to your account</span><span>Works offline</span><span>Delete everything anytime</span></div>
         </div>
         <div class="seg" aria-hidden="true">
           <span class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>Public</span>
@@ -609,18 +616,18 @@
       <h2 class="serif">What FoodSpot <em>does</em>.</h2>
     </div>
     <div class="prose" data-reveal>
-      <p><strong>FoodSpot</strong> is a free Android app, made by ftwco., for saving the restaurants you discover in
-        Instagram and YouTube food videos. Share a reel to FoodSpot and it reads the caption, finds the restaurant,
-        and pins it on your personal food map. Later, tap the pin for directions in Google Maps.</p>
-      <p>Pick a username to get your own profile. Keep each spot public or private, follow friends and creators,
-        rate places, and respot their finds into your own list.</p>
-      <h3>Your FoodSpot account</h3>
-      <p>You log in so your saved spots are kept in your account and stay with you when you change phones. You can
-        log in with a one-time code sent to your email, or with <strong>Sign in with Google</strong>.</p>
-      <p>When you sign in with Google, FoodSpot receives only your <strong>name, email address and Google account
-        ID</strong>. We use them only to create your FoodSpot account, log you in and sync your saved spots. We don’t
-        use them for ads, don’t sell them and don’t share them. You can delete your account and all its data in the
-        app at any time. Details are in our <a href="privacy">Privacy Policy</a>.</p>
+      <p class="lead">A free Android app by ftwco. Share a food reel and FoodSpot pins the restaurant on your own map, ready
+        for directions when you’re nearby.</p>
+      <ul class="facts">
+        <li><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></span>
+          <div><b>Your account</b>Log in with an email code or Google. Your spots stay with you on every phone.</div></li>
+        <li><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>
+          <div><b>Sign in with Google</b>We receive only your name, email address and Google account ID, and use them only
+            to log you in and sync your spots. Never for ads, never sold or shared.</div></li>
+        <li><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 13h12l1-13M9 7V4h6v3"/></svg></span>
+          <div><b>Your data, your call</b>Delete your account and everything in it from the app, anytime.
+            <a href="privacy">Privacy Policy</a></div></li>
+      </ul>
     </div>
   </div>
 </section>
@@ -665,7 +672,7 @@
       <details><summary>Which reels work?</summary><p>Any Instagram reel or YouTube Short (and most web pages or Google Maps links). FoodSpot works best when the caption names the place, like “📍 Restaurant, Area, City”. If it can’t tell, it shows its best guess and you pick the spot on the map.</p></details>
       <details><summary>Who can see my spots?</summary><p>You choose for each spot. Public spots show on your profile and on the maps of people who follow you; private spots are only yours. Spots you saved before profiles existed stay private.</p></details>
       <details><summary>Where is my data stored?</summary><p>In your FoodSpot account, so your spots follow you to a new phone, with a copy on your phone for offline use. You can delete your account in the app at any time. Read the <a href="privacy">privacy policy</a>.</p></details>
-      <details><summary>I’m a creator. Can I link my profile?</summary><p>Soon: you’ll be able to connect your Instagram or YouTube to your FoodSpot profile, so fans can follow the places from your reels.</p></details>
+      <details><summary>I’m a creator. Can I link my profile?</summary><p>Yes. Open your profile, tap <strong>Edit profile</strong> and connect Instagram or YouTube. Your handle shows on your profile, so fans can follow the places from your reels. We’re opening it up to every account as Instagram and Google finish reviewing FoodSpot.</p></details>
     </div>
   </div>
 </section>
