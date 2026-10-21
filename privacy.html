@@ -38,6 +38,8 @@
       Google only for these basic details (<span class="code">openid email profile</span>).</li>
     <li><strong>Sign-in limits:</strong> to stop abuse, we count code requests per email address and per
       IP address for an hour.</li>
+    <li><strong>Username and name:</strong> the username you pick (required) and an optional display name.
+      Both are public: anyone on FoodSpot can find your profile by them.</li>
     <li>Your login stays active on a phone until you log out. You can log out of all phones at once.</li>
   </ul>
   <p><strong>Google user data.</strong> If you sign in with Google, we use your name, email address and Google
@@ -55,11 +57,30 @@
     <li><strong>Where:</strong> in your FoodSpot account on our server (Cloudflare), so they sync between your
       phones, and as a copy on each phone you’re logged in on, so the map works offline. Logging out removes
       the copy from that phone; the spots stay in your account.</li>
-    <li>Only you can see your saved spots. Nobody else can, unless you share a spot yourself.</li>
+    <li><strong>Private spots</strong> are only visible to you. <strong>Public spots</strong> (you choose
+      per spot) appear on your profile and on the maps of people who follow you, with your rating. Spots saved
+      before profiles existed stay private.</li>
+    <li>If you respot someone’s public spot, the original owner’s username is kept with your copy, and their
+      spot shows how many times it was respotted.</li>
     <li>We keep them until you delete them or delete your account.</li>
   </ul>
 
-  <h2>3. Data that stays on your phone</h2>
+  <h2>3. Profiles, follows and alerts</h2>
+  <ul>
+    <li><strong>Your public profile</strong> shows your username, name, public spots, how many followers you
+      have and how many people you follow, and the lists of followers and following.</li>
+    <li><strong>Following</strong> someone is public (it appears in those lists). You can unfollow at any
+      time.</li>
+    <li><strong>Alerts (optional):</strong> if you turn on the bell on a profile, we store your phone’s
+      notification token in your account and send alerts through <strong>Firebase Cloud Messaging</strong>
+      (Google) when that person adds a public spot. The alert contains their username, the spot’s name and its
+      rating. Turn it off with the bell, or block notifications in your phone’s settings. Logging out removes
+      the token.</li>
+    <li><strong>Instagram / YouTube on your profile (optional):</strong> if you connect them, their handles
+      are shown on your profile. See section 7 for what we receive.</li>
+  </ul>
+
+  <h2>4. Data that stays on your phone</h2>
   <ul>
     <li><strong>Your location:</strong> if you allow it, FoodSpot uses it to show where you are on the
       map. Your exact location never leaves your phone and isn’t stored in your account. When you share a
@@ -69,7 +90,7 @@
       of creators whose reels you saved, kept so their profiles open quickly.</li>
   </ul>
 
-  <h2>4. Services FoodSpot uses</h2>
+  <h2>5. Services FoodSpot uses</h2>
   <p>To do its job, the app makes requests to these services directly from your phone. They see your
     IP address and the request, under their own privacy policies:</p>
   <ul>
@@ -82,17 +103,19 @@
     <li><strong>Google Maps</strong>: when you tap “Let’s go”, the destination opens in Google Maps.</li>
     <li><strong>Cloudflare</strong>: runs our server (your account and spots) and this website.</li>
     <li><strong>Resend</strong>: sends the login-code emails (it receives your email address and the code).</li>
+    <li><strong>Firebase Cloud Messaging (Google)</strong>: delivers alerts, if you turn them on (it receives
+      your phone’s notification token and the alert text).</li>
     <li><strong>GitHub</strong>: hosts app downloads and older shared-spot links.</li>
   </ul>
 
-  <h2>5. Sharing a spot</h2>
+  <h2>6. Sharing a spot</h2>
   <p>A shared spot link contains the spot itself (name, address, map position, reel link and creator),
     encoded in the part of the link after “#”. The link itself isn’t stored on our server. Anyone you
     send it to can see those details.</p>
 
-  <h2>6. Creators who claim their profile</h2>
-  <p>Creators can claim their FoodSpot profile and connect their other social accounts by signing in
-    with Instagram or Google (YouTube). When they do:</p>
+  <h2>7. Connecting Instagram or YouTube</h2>
+  <p>You can connect your Instagram or YouTube account to your FoodSpot profile, and creators can claim
+    the profile built from their reels, by signing in with Instagram or Google (YouTube). When you do:</p>
   <ul>
     <li>We receive their account’s ID, username/handle and display name, and store them on our server
       (Cloudflare) with the time they connected, so every FoodSpot user can see the connected accounts.</li>
@@ -115,16 +138,17 @@
     <a href="https://myaccount.google.com/permissions">Google Account permissions</a> or Instagram’s
     “Apps and websites” settings.</p>
 
-  <h2>7. Deleting your data</h2>
-  <p>In the app: <strong>My spots → your initial (top right) → Delete account</strong>. This immediately and
-    permanently deletes your account, all your saved spots and any creator profile you claimed. You can
+  <h2>8. Deleting your data</h2>
+  <p>In the app: <strong>Profile → your initial (top right) → Delete account</strong>. This immediately and
+    permanently deletes your account, username, all your saved spots (public and private), your follows and
+    followers, alert tokens, connected accounts and any creator profile you claimed. You can
     also email us; see <a href="delete-data">Delete your data</a>.</p>
 
-  <h2>8. Children</h2>
+  <h2>9. Children</h2>
   <p>FoodSpot isn’t directed at children under 13, and creator sign-in is for adults with professional
     social media accounts.</p>
 
-  <h2>9. Changes and contact</h2>
+  <h2>10. Changes and contact</h2>
   <p>We’ll update this page if anything changes, and change the date above. Questions or requests:
     <a href="mailto:privacy@foodspot.app">privacy@foodspot.app</a>.</p>
 
