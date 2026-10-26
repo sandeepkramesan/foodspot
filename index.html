@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>FoodSpot · Coming soon</title>
-<meta name="description" content="FoodSpot pins the restaurants you see in food reels on your map. Coming soon to Google Play." />
+<meta name="description" content="Watched a hundred café and restaurant reels, but can’t remember which one is where? Your solution is coming soon." />
 <meta name="theme-color" content="#0D0C0B" />
 <meta name="robots" content="noindex" />
 <link rel="icon" href="icon.png" />
@@ -22,8 +22,11 @@
   /* The full home page is kept in site/launch/ until FoodSpot is on Google Play. */
   main { min-height: calc(100vh - 80px); display: flex; flex-direction: column; }
   .soon { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 48px 0; }
-  .soon h1 { font-size: 40px; }
-  .soon p { max-width: 460px; font-size: 17px; }
+  .soon h1 { font-size: clamp(30px, 6vw, 46px); max-width: 720px; }
+  .soon .lead { font-size: 20px; color: var(--text); margin: 18px 0 22px; }
+  .mail { align-self: flex-start; font-weight: 600; font-size: 17px; text-decoration: none;
+    border: 1px solid var(--border); background: var(--card); padding: 10px 18px; border-radius: 999px; }
+  .mail:hover { border-color: var(--accent); }
   .pill { display: inline-block; align-self: flex-start; background: var(--accent-soft); color: var(--accent);
     font-weight: 700; font-size: 13px; letter-spacing: .4px; text-transform: uppercase; padding: 4px 12px;
     border-radius: 999px; margin-bottom: 16px; }
@@ -35,10 +38,9 @@
 
   <section class="soon">
     <span class="pill">Coming soon</span>
-    <h1>Every food reel, pinned on your map.</h1>
-    <p>Share a reel from Instagram or YouTube and FoodSpot finds the restaurant and pins it on your map.
-      We’re getting it ready for Google Play.</p>
-    <p>Questions? Write to <a href="mailto:support@foodspot.app">support@foodspot.app</a>.</p>
+    <h1>Watched a hundred café and restaurant reels, but can’t remember which one is where?</h1>
+    <p class="lead">Your solution is coming soon.</p>
+    <a class="mail" href="mailto:support@foodspot.app">support@foodspot.app</a>
   </section>
 
   <footer><a href="./">FoodSpot</a><a href="privacy">Privacy</a><a href="terms">Terms</a><a href="delete-data">Delete your data</a></footer>
