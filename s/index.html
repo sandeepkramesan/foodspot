@@ -6,13 +6,25 @@
 <title>FoodSpot</title>
 <meta name="description" content="A restaurant shared with you on FoodSpot." />
 <meta name="theme-color" content="#0D0C0B" />
+<!-- Link previews (WhatsApp, Telegram…). For short links (/s/<id>) the site Worker
+     (site/src/index.js) fills in the spot's name and address. -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="FoodSpot" />
+<meta property="og:title" content="FoodSpot" />
+<meta property="og:description" content="A restaurant shared with you on FoodSpot." />
+<meta property="og:url" content="https://foodspot.app/s/" />
+<meta property="og:image" content="https://foodspot.app/share-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
 <link rel="icon" href="../icon.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" />
 <!--
-  FoodSpot share landing page. Static: the spot travels in the URL fragment
-  (#<base64url JSON>, format v1, same as src/lib/spot-codec.ts), so no server is needed.
+  FoodSpot share landing page. The spot is a base64url JSON payload (format v1, same as
+  src/lib/spot-codec.ts): short links /s/<id> get it from the site Worker (window.FS_PAYLOAD),
+  older long links carry it in the URL fragment (#<payload>).
   On Android it first tries to open the app (foodspot://add?d=…) and comes back here with
   ?noapp=1 if FoodSpot isn't installed. Set APK_URL below when the APK is published.
 -->
@@ -135,13 +147,14 @@
     return parts.slice(-2).join(' · ');
   }
 
-  var payload = location.hash.slice(1);
+  var payload = location.hash.slice(1) || window.FS_PAYLOAD || '';
   var spot = null;
   try { spot = payload ? decode(payload) : null; } catch (e) { spot = null; }
   if (!spot || spot.v !== 1) spot = null;
 
   var isAndroid = /Android/i.test(navigator.userAgent);
   var appLink = spot ? 'foodspot://add?d=' + payload : 'foodspot://';
+  // Short links keep their path (/s/<id>); the Worker fills the payload in again on the way back.
   var noApp = /[?&]noapp=1/.test(location.search);
   var fallback = location.origin + location.pathname + '?noapp=1' + location.hash;
   var intentLink = 'intent://' + appLink.replace('foodspot://', '') +
@@ -154,7 +167,8 @@
 
   if (!spot) {
     $('actions').classList.add('hidden');
-    if (payload) {
+    // FS_MISSING: a short link the server doesn't know (mistyped, or its owner deleted their account).
+    if (payload || window.FS_MISSING) {
       $('note').textContent = 'This link looks incomplete. Ask your friend to share it again.';
     } else {
       // Home page (no shared spot).
