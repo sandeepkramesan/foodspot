@@ -1,4 +1,4 @@
-/* Shared styles for FoodSpot's static pages (privacy, terms, delete-data). */
+/* Shared styles for Spotogo's static pages (privacy, terms, delete-data). */
 :root {
   /* Crisp white Wine & Olive (same as the app): white surfaces, near-black text, no pastel fills. Light only. */
   --bg: #FFFFFF; --card: #FFFFFF; --text: #121212; --muted: #555555; --faint: #8C8C8C;
@@ -17,6 +17,9 @@ a { color: var(--accent); }
 .brand img { width: 36px; height: 36px; border-radius: 10px; }
 .wordmark { font-family: Fraunces, Georgia, serif; font-size: 22px; font-weight: 600; }
 .wordmark span { color: var(--accent); }
+/* The tagline sits under every Spotogo logo. */
+.logo-text { display: flex; flex-direction: column; line-height: 1.1; }
+.tagline { font-size: 11.5px; font-weight: 600; letter-spacing: 0.04em; color: var(--faint); margin-top: 2px; }
 h1 { font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 34px; line-height: 1.15; letter-spacing: -0.4px; margin: 0 0 6px; }
 h2 { font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 22px; margin: 34px 0 8px; }
 .updated { color: var(--faint); font-size: 14px; margin: 0 0 24px; }

@@ -3,17 +3,17 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>FoodSpot</title>
-<meta name="description" content="A restaurant shared with you on FoodSpot." />
+<title>Spotogo</title>
+<meta name="description" content="A restaurant shared with you on Spotogo." />
 <meta name="theme-color" content="#FFFFFF" />
 <!-- Link previews (WhatsApp, Telegram…). For short links (/s/<id>) the site Worker
      (site/src/index.js) fills in the spot's name and address. -->
 <meta property="og:type" content="website" />
-<meta property="og:site_name" content="FoodSpot" />
-<meta property="og:title" content="FoodSpot" />
-<meta property="og:description" content="A restaurant shared with you on FoodSpot." />
-<meta property="og:url" content="https://foodspot.app/s/" />
-<meta property="og:image" content="https://foodspot.app/share-card.png" />
+<meta property="og:site_name" content="Spotogo" />
+<meta property="og:title" content="Spotogo" />
+<meta property="og:description" content="A restaurant shared with you on Spotogo." />
+<meta property="og:url" content="https://spotogo.in/s/" />
+<meta property="og:image" content="https://spotogo.in/share-card.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -22,11 +22,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" />
 <!--
-  FoodSpot share landing page. The spot is a base64url JSON payload (format v1, same as
+  Spotogo share landing page. The spot is a base64url JSON payload (format v1, same as
   src/lib/spot-codec.ts): short links /s/<id> get it from the site Worker (window.FS_PAYLOAD),
   older long links carry it in the URL fragment (#<payload>).
-  On Android it first tries to open the app (foodspot://add?d=…) and comes back here with
-  ?noapp=1 if FoodSpot isn't installed. Set APK_URL below when the APK is published.
+  On Android it first tries to open the app (spotogo://add?d=…) and comes back here with
+  ?noapp=1 if Spotogo isn't installed. Set APK_URL below when the APK is published.
 -->
 <style>
   :root {
@@ -48,6 +48,7 @@
   .brand img { width: 40px; height: 40px; border-radius: 12px; }
   .wordmark { font-family: Fraunces, Georgia, serif; font-size: 24px; font-weight: 600; letter-spacing: -0.3px; }
   .wordmark span { color: var(--accent); }
+  .tagline { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; color: var(--faint); margin-top: 2px; }
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 22px; }
   .label { font-size: 11px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase; color: var(--faint); }
   h1 { font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 32px; line-height: 1.12; letter-spacing: -0.5px; margin: 6px 0 8px; overflow-wrap: anywhere; }
@@ -75,13 +76,14 @@
 <main>
   <div class="brand">
     <img src="../icon.png" alt="" />
-    <div class="wordmark">Food<span>Spot</span></div>
+    <div class="wordmark">Spoto<span>Go</span></div>
+    <div class="tagline">Find it. Pin it. Go.</div>
   </div>
 
   <section class="card" id="spot">
     <div class="label" id="place">Shared with you</div>
     <h1 id="name">A food spot for you</h1>
-    <p class="address" id="address">Open this link on your phone to see it in FoodSpot.</p>
+    <p class="address" id="address">Open this link on your phone to see it in Spotogo.</p>
     <div class="creator hidden" id="creator">
       <div class="avatar" id="initial"></div>
       <div>
@@ -92,7 +94,7 @@
   </section>
 
   <div class="actions" id="actions">
-    <a class="btn primary" id="open" href="#">Open in FoodSpot</a>
+    <a class="btn primary" id="open" href="#">Open in Spotogo</a>
     <div class="row">
       <a class="btn" id="directions" target="_blank" rel="noopener">Directions</a>
       <a class="btn" id="reel" target="_blank" rel="noopener">Watch the reel</a>
@@ -100,7 +102,7 @@
   </div>
 
   <section class="card download">
-    <h2>Don’t have FoodSpot yet?</h2>
+    <h2>Don’t have Spotogo yet?</h2>
     <a class="btn primary" id="download" href="#">Download for Android</a>
     <p>Save restaurants from Instagram and YouTube reels and find them on your map.<br />
       Android may ask you to allow installs from your browser.</p>
@@ -115,11 +117,11 @@
 <script>
 (function () {
   // Where the APK is downloaded from (e.g. a GitHub Releases "latest" asset URL).
-  // FoodSpot.apk is 64-bit only (nearly every phone); FoodSpot-32bit.apk is for older phones.
-  // Empty until FoodSpot is on Google Play: the card then says "Android app coming soon".
+  // Spotogo.apk is 64-bit only (nearly every phone); Spotogo-32bit.apk is for older phones.
+  // Empty until Spotogo is on Google Play: the card then says "Android app coming soon".
   var APK_URL = '';
   var APK_32_URL = '';
-  var PACKAGE = 'com.foodspot.app';
+  var PACKAGE = 'com.spotogo.app';
 
   var B64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
   function decode(s) {
@@ -149,12 +151,12 @@
   if (!spot || spot.v !== 1) spot = null;
 
   var isAndroid = /Android/i.test(navigator.userAgent);
-  var appLink = spot ? 'foodspot://add?d=' + payload : 'foodspot://';
+  var appLink = spot ? 'spotogo://add?d=' + payload : 'spotogo://';
   // Short links keep their path (/s/<id>); the Worker fills the payload in again on the way back.
   var noApp = /[?&]noapp=1/.test(location.search);
   var fallback = location.origin + location.pathname + '?noapp=1' + location.hash;
-  var intentLink = 'intent://' + appLink.replace('foodspot://', '') +
-    '#Intent;scheme=foodspot;package=' + PACKAGE +
+  var intentLink = 'intent://' + appLink.replace('spotogo://', '') +
+    '#Intent;scheme=spotogo;package=' + PACKAGE +
     ';S.browser_fallback_url=' + encodeURIComponent(fallback) + ';end';
 
   if (APK_URL) $('download').href = APK_URL;
@@ -170,13 +172,13 @@
       // Home page (no shared spot).
       $('place').textContent = 'Save the food you see in reels';
       $('name').textContent = 'Your food map, from reels';
-      $('address').textContent = 'Seen a great food reel on Instagram or YouTube? Share it to FoodSpot. ' +
+      $('address').textContent = 'Seen a great food reel on Instagram or YouTube? Share it to Spotogo. ' +
         'It finds the restaurant, pins it on your map, and gets you there with one tap.';
     }
     return;
   }
 
-  document.title = spot.n + ' · FoodSpot';
+  document.title = spot.n + ' · Spotogo';
   $('place').textContent = cityLabel(spot.a || '') || 'Shared with you';
   $('name').textContent = spot.n;
   $('address').textContent = spot.a || '';
@@ -192,7 +194,7 @@
   $('open').href = isAndroid ? intentLink : appLink;
 
   if (noApp) {
-    $('note').textContent = 'FoodSpot isn’t installed on this phone yet. Download it, then open this link again.';
+    $('note').textContent = 'Spotogo isn’t installed on this phone yet. Download it, then open this link again.';
     $('open').classList.remove('primary');
   } else if (isAndroid) {
     // Opens the app if installed; otherwise Chrome loads the ?noapp=1 fallback (this page).

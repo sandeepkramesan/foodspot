@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>FoodSpot · Coming soon</title>
+<title>Spotogo · Coming soon</title>
 <meta name="description" content="Watched a hundred café and restaurant reels, but can’t remember which one is where? Your solution is coming soon." />
 <meta name="theme-color" content="#FFFFFF" />
 <meta name="robots" content="noindex" />
@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" />
-<link rel="stylesheet" href="site.css?v=3" />
+<link rel="stylesheet" href="site.css?v=4" />
 <script>
   // Shared-spot links used to live at the site root (#<payload>); send them to /s/.
   function toSpot() { if (location.hash.length > 20) location.replace('s/' + location.hash); }
@@ -19,7 +19,7 @@
   addEventListener('hashchange', toSpot);
 </script>
 <style>
-  /* The full home page is kept in site/launch/ until FoodSpot is on Google Play. */
+  /* The full home page is kept in site/launch/ until Spotogo is on Google Play. */
   main { min-height: calc(100vh - 80px); display: flex; flex-direction: column; }
   .soon { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 48px 0; }
   .soon h1 { font-size: clamp(30px, 6vw, 46px); max-width: 720px; }
@@ -34,16 +34,16 @@
 </head>
 <body>
 <main>
-  <a class="brand" href="./"><img src="icon.png" alt="" /><span class="wordmark">Food<span>Spot</span></span></a>
+  <a class="brand" href="./"><img src="icon.png" alt="" /><span class="logo-text"><span class="wordmark">Spoto<span>Go</span></span><span class="tagline">Find it. Pin it. Go.</span></span></a>
 
   <section class="soon">
     <span class="pill">Coming soon</span>
     <h1>Watched a hundred café and restaurant reels, but can’t remember which one is where?</h1>
     <p class="lead">Your solution is coming soon.</p>
-    <a class="mail" href="mailto:support@foodspot.app">support@foodspot.app</a>
+    <a class="mail" href="mailto:support@spotogo.in">support@spotogo.in</a>
   </section>
 
-  <footer><a href="./">FoodSpot</a><a href="privacy">Privacy</a><a href="terms">Terms</a><a href="delete-data">Delete your data</a></footer>
+  <footer><a href="./">Spotogo</a><a href="privacy">Privacy</a><a href="terms">Terms</a><a href="delete-data">Delete your data</a></footer>
 </main>
 </body>
 </html>

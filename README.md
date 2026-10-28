@@ -1,6 +1,10 @@
-# FoodSpot
+# Spotogo
 
-Share links for [FoodSpot](https://sandeepkramesan.github.io/foodspot/), an app that pins restaurants from Instagram and YouTube food reels on your map.
+Find it. Pin it. Go.
 
-- `index.html`: the page a shared FoodSpot link opens. It opens the app if it's installed, or offers the Android download.
-- Android app: see [Releases](https://github.com/sandeepkramesan/foodspot/releases/latest).
+Website and Android downloads for [Spotogo](https://spotogo.in), an app that pins restaurants from Instagram and YouTube food reels on your map.
+
+- Website: https://spotogo.in (this repo is a copy of it, served at https://sandeepkramesan.github.io/spotogo/).
+- Android app: see [Releases](https://github.com/sandeepkramesan/spotogo/releases/latest) (`Spotogo.apk`; `Spotogo-32bit.apk` for older phones).
+
+Spotogo was called FoodSpot before 28 October 2026.
